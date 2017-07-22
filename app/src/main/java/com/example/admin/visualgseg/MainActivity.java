@@ -8,6 +8,11 @@ import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImages
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassification;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 public class MainActivity extends AppCompatActivity {
 
