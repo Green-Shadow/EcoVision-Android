@@ -17,12 +17,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    VisualClassification pushToWatson (String filePath){//filePath would store image location (eg:-"src/test/resources/visual_recognition/car.png")
+    VisualClassification pushToWatson (String filePath){                                            //filePath would store image location (eg:-"src/test/resources/visual_recognition/car.png")
         VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);
         service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
 
         ClassifyImagesOptions options = new ClassifyImagesOptions.Builder()
-                .images(new File("src/test/resources/visual_recognition/car.png"))//passes filePath to analyze
+                .images(new File(filePath))                                                         //passes filePath to analyze
                 .build();
         VisualClassification result = service.classify(options).execute();
         return result;
