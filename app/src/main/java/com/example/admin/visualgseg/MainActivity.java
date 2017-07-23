@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.app.AlertDialog.Builder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,9 +33,15 @@ public class MainActivity extends AppCompatActivity {
         service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
 
         ClassifyImagesOptions options = new ClassifyImagesOptions.Builder()
-                .images(takePhoto())                                                         //calls takePhoto() to launch camera app
+                .images(takePhoto())//calls takePhoto() to launch camera app
                 .build();
         VisualClassification result = service.classify(options).execute();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(result.toString())//Stub code -- alert box will be formed with JSON code in it.
+                .setCancelable(false)
+                .setPositiveButton("OK",null);
+        AlertDialog alert = builder.create();
+        alert.show();
         return result.toString();
     }
     private File takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
