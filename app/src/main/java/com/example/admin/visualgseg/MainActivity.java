@@ -1,5 +1,6 @@
 package com.example.admin.visualgseg;
 
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -63,9 +64,28 @@ public class MainActivity extends AppCompatActivity {
     return null;
 }
     void action(View view){
-        File image = takePhoto();
         String result = pushToWatson(image);
         TextView output = (TextView)findViewById(R.id.result);
         output.setText(result);
+    }
+
+
+    private class action extends AsyncTask<Void,Void,String>{
+        @Override
+        protected void onPreExecute() {
+            File image = takePhoto();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String scores = pushToWatson(image);
+            return scores;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            TextView output = (TextView)findViewById(R.id.result);
+            output.setText(s);
+        }
     }
 }
