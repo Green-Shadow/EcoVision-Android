@@ -1,6 +1,7 @@
 package com.example.admin.visualgseg;
 
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.app.AlertDialog.Builder;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,13 +30,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public String pushToWatson (File photoFile, View view){                                           
+    public String pushToWatson (File photoFile){
         VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);
         service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
 
-        ClassifyImagesOptions options = new ClassifyImagesOptions.Builder()
-                .images(photoFile)//calls takePhoto() to launch camera app
-                .build();
+        ClassifyImagesOptions options = null;
+            options = new ClassifyImagesOptions.Builder()
+                    .images(photoFile)//calls takePhoto() to launch camera app
+                    .build();
         VisualClassification result = service.classify(options).execute();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(result.toString())//Stub code -- alert box will be formed with JSON code in it.
@@ -59,4 +62,10 @@ public class MainActivity extends AppCompatActivity {
     }
     return null;
 }
+    void action(View view){
+        File image = takePhoto();
+        String result = pushToWatson(image);
+        TextView output = (TextView)findViewById(R.id.result);
+        output.setText(result);
+    }
 }
