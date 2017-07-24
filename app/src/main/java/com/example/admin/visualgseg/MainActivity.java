@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
 
         ClassifyImagesOptions options = new ClassifyImagesOptions.Builder()
-                .images(takePhoto())//calls takePhoto() to launch camera app
+                .images(photoFile)//calls takePhoto() to launch camera app
                 .build();
         VisualClassification result = service.classify(options).execute();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-        if (photoFile != null) {
+        if (image != null) {
             Uri photoURI = Uri.fromFile(image);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             startActivityForResult(takePictureIntent, 1);
