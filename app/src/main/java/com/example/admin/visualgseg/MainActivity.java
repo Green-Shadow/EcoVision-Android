@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         return result.toString();
     }
     private File takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
-    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date());
     String imageFileName = "JPEG_" + timeStamp + "_";
     File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -63,22 +63,38 @@ public class MainActivity extends AppCompatActivity {
     }
     return null;
 }
-    void action(View view){
-        String result = pushToWatson(image);
-        TextView output = (TextView)findViewById(R.id.result);
-        output.setText(result);
+    void onClick (View view){
+        new action().execute();
+    }
+    void onClick2 (View view){
+        try {
+            image = takePhoto();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        pushToWatson(image);
     }
 
-
+    File image = null;
     private class action extends AsyncTask<Void,Void,String>{
         @Override
         protected void onPreExecute() {
-            File image = takePhoto();
+            try {
+                image  = takePhoto();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         protected String doInBackground(Void... params) {
-            String scores = pushToWatson(image);
+            String scores = null;
+            while (true) {
+                if (image != null) {
+                    scores = pushToWatson(image);
+                }
+                if (scores!= null){break;}
+            }
             return scores;
         }
 
