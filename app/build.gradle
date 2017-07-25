@@ -29,6 +29,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.ibm.watson.developer_cloud:visual-recognition:3.8.0'
+    compile 'com.ibm.watson.developer_cloud:java-sdk:3.0.0-RC1'
+    compile'com.ibm.watson.developer_cloud:visual-recognition:3.8.1-SNAPSHOT'
     testCompile 'junit:junit:4.12'
 }

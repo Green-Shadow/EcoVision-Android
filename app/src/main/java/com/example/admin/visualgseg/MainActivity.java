@@ -6,9 +6,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
-import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImagesOptions;
-import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassification;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +19,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.app.AlertDialog.Builder;
 import android.widget.TextView;
+
+import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
+import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImagesOptions;
+import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassification;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -88,13 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            String scores = null;
-            while (true) {
-                if (image != null) {
-                    scores = pushToWatson(image);
-                }
-                if (scores!= null){break;}
-            }
+
+            String scores = pushToWatson(image);
             return scores;
         }
 
@@ -104,4 +100,5 @@ public class MainActivity extends AppCompatActivity {
             output.setText(s);
         }
     }
+
 }
