@@ -41,12 +41,6 @@ public class MainActivity extends AppCompatActivity {
                     .images(photoFile)//calls takePhoto() to launch camera app
                     .build();
         VisualClassification result = service.classify(options).execute();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(result.toString())//Stub code -- alert box will be formed with JSON code in it.
-                .setCancelable(false)
-                .setPositiveButton("OK",null);
-        AlertDialog alert = builder.create();
-        alert.show();
         return result.toString();
     }
     private File takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
@@ -67,14 +61,6 @@ public class MainActivity extends AppCompatActivity {
     void onClick (View view){
         new action().execute();
     }
-    void onClick2 (View view){
-        try {
-            image = takePhoto();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        pushToWatson(image);
-    }
 
     File image = null;
     private class action extends AsyncTask<Void,Void,String>{
@@ -89,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-
             String scores = pushToWatson(image);
             return scores;
         }
