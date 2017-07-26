@@ -62,12 +62,6 @@ public class MainActivity extends AppCompatActivity {
     String json = null;
     void onClick (View view){
         new action().execute();
-        try{
-        Intent intent = new Intent(MainActivity.this, ResultActivity.class); //Start of code for activity transfer.
-        intent.putExtra("PHOTO", image);
-        intent.putExtra("JSON",json);
-        startActivity(intent);}
-        catch(Exception e){e.printStackTrace();}
         
     }
 
@@ -93,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
             json = s;
             TextView output = (TextView)findViewById(R.id.result);
             output.setText(s);
+            try{
+                Intent intent = new Intent(MainActivity.this, ResultActivity.class); //Start of code for activity transfer.
+                intent.putExtra("PHOTO", image);
+                intent.putExtra("JSON",json);
+                startActivity(intent);}
+            catch(Exception e){e.printStackTrace();}
             
             
         }
