@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     return null;
 }
     File image = null;
-    String json = null;
     void onClick (View view){
         new action().execute();
         
@@ -84,13 +83,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            json = s;
             TextView output = (TextView)findViewById(R.id.result);
             output.setText(s);
             try{
                 Intent intent = new Intent(MainActivity.this, ResultActivity.class); //Start of code for activity transfer.
                 intent.putExtra("PHOTO", image);
-                intent.putExtra("JSON",json);
+                intent.putExtra("JSON",s);
                 startActivity(intent);}
             catch(Exception e){e.printStackTrace();}
             
