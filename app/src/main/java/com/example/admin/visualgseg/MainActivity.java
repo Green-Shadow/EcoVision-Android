@@ -32,13 +32,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public String pushToWatson (File photoFile){
+    public String pushToWatson (String path){
         VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);
         service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
 
         ClassifyImagesOptions options = null;
             options = new ClassifyImagesOptions.Builder()
-                    .images(photoFile)//calls takePhoto() to launch camera app
+                    .images(new File(path))//modified implementation as per SDK documentation.
                     .build();
         VisualClassification result = service.classify(options).execute();
         return result.toString();
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             try {
-                image  = takePhoto();
+                image = takePhoto();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            String scores = pushToWatson(image);
+            String scores = pushToWatson(image.getAbsolutePath());
             return scores;
         }
 
