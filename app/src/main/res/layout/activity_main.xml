@@ -16,4 +16,10 @@
         tools:layout_editor_absoluteX="164dp"
         tools:layout_editor_absoluteY="229dp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/result"/>
+
+
 </android.support.constraint.ConstraintLayout>
