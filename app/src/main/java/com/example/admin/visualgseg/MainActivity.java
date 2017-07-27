@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ClassifyImagesOptions options = null;
             options = new ClassifyImagesOptions.Builder()
                     .images(new File(path))//modified implementation as per SDK documentation.
+                    .threshold(0.1)//This is required for our classifier to refect in its current state.
                     .build();
         VisualClassification result = service.classify(options).execute();
         return result.toString();
