@@ -26,9 +26,12 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.SimpleMultiPartRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
-    
-    String BASE_URL = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=145b047be11f5059687578f4ca85325d23e0cdf8&version=2016-05-20"
+
+    String BASE_URL = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=145b047be11f5059687578f4ca85325d23e0cdf8&version=2016-05-20";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
         SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, BASE_URL,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String response) {
-                        JSONObject jObj = new JSONObject(response);
+                    public void onResponse(String response){
+                        try {
+                            JSONObject jObj = new JSONObject(response);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -49,32 +56,33 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-    
-                smr.addFile("images_file",image.getAbsolutePath());
-                VolleyHelper.getInstance().addToRequestQueue(smr);
-                return scores.toString();
+
+
+        smr.addFile("images_file",image.getAbsolutePath());
+        VolleyHelper.getInstance().addToRequestQueue(smr);
+        return score.toString();
     }
     private File takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
-    String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date());
-    String imageFileName = "JPEG_" + timeStamp + "_";
-    File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
-    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-        if (image != null) {
-            Uri photoURI = Uri.fromFile(image);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(takePictureIntent, 1);
-            return image;
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            if (image != null) {
+                Uri photoURI = Uri.fromFile(image);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 1);
+                return image;
+            }
         }
+        return null;
     }
-    return null;
-}
     File image = null;
     void onClick (View view){
         new action().execute();
     }
 
-    
+
     private class action extends AsyncTask<Void,Void,String>{
         @Override
         protected void onPreExecute() {
@@ -87,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            
+            String scores = pushToWatson(image.getAbsolutePath());
             return scores;
         }
 
@@ -101,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("JSON",s);
                 startActivity(intent);}
             catch(Exception e){e.printStackTrace();}
-            
-            
+
+
         }
     }
 
