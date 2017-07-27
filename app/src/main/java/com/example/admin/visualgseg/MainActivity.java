@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
     File image = null;
     void onClick (View view){
         new action().execute();
-        
     }
 
     
