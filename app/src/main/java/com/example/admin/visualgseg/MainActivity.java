@@ -19,12 +19,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.app.AlertDialog.Builder;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
-import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImagesOptions;
-import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassification;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.SimpleMultiPartRequest;
 
 public class MainActivity extends AppCompatActivity {
+    
+    String BASE_URL = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=145b047be11f5059687578f4ca85325d23e0cdf8&version=2016-05-20"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +37,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String pushToWatson (String path){
-        VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);
-        service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
-
-        ClassifyImagesOptions options = null;
-            options = new ClassifyImagesOptions.Builder()
-                    .images(new File(path))//modified implementation as per SDK documentation.
-                    .threshold(0.1)//This is required for our classifier to refect in its current state.
-                    .build();
-        VisualClassification result = service.classify(options).execute();
-        return result.toString();
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, BASE_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        JSONObject jObj = new JSONObject(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    
+                smr.addFile("images_file",image.getAbsolutePath());
+                VolleyHelper.getInstance().addToRequestQueue(smr);
+                return scores.toString();
     }
     private File takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
     String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date());
@@ -78,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            String scores = pushToWatson(image.getAbsolutePath());
+            
             return scores;
         }
 
