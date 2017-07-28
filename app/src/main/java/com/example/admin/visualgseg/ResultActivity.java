@@ -41,14 +41,12 @@ public class ResultActivity extends AppCompatActivity {
         }
         JSONArray classifiers = watson.getJSONArray("classifiers");
         for (int i=0; i < classifiers.length(); i+=1){
-            JSONObject classifier = classifiers.getJSONObject(i);
-            String classifier_id = classifier.getString("classifier_id");
-            if (classifier_id==" "){                                                                //Add classifier_id here
+            String classifier_id = classifiers.getJSONObject(i).getString("classifier_id");
+            if (classifier_id==" "){    //TODO:Add classifier ID                                               
                 JSONArray classes = classifier.getJSONArray("classes");
                 for (int j=0; j < classifiers.length(); j+=1){
-                    JSONObject Class = classes.getJSONObject(j);
-                    String class_name = Class.getString("class");
-                    int score = Class.getInt("score");
+                    String class_name = classes.getJSONObject(j).getString("class");
+                    int score = classes.getJSONObject(j).getInt("score");
                     if (j==0){
                         highestScore=score;
                         wasteType=class_name;
