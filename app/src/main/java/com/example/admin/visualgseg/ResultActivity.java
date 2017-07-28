@@ -43,7 +43,7 @@ public class ResultActivity extends AppCompatActivity {
         for (int i=0; i < classifiers.length(); i+=1){
             String classifier_id = classifiers.getJSONObject(i).getString("classifier_id");
             if (classifier_id==" "){    //TODO:Add classifier ID                                               
-                JSONArray classes = classifier.getJSONArray("classes");
+                JSONArray classes = classifiers.getJSONObject(i).getJSONArray("classes");
                 for (int j=0; j < classifiers.length(); j+=1){
                     String class_name = classes.getJSONObject(j).getString("class");
                     int score = classes.getJSONObject(j).getInt("score");

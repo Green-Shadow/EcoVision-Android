@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.Snackbar;
 import android.os.Bundle;
 
 
@@ -20,6 +21,9 @@ import android.widget.Button;
 import android.app.AlertDialog.Builder;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.content.Context;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     String BASE_URL = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=145b047be11f5059687578f4ca85325d23e0cdf8&version=2016-05-20";
     //Validation to see if internet is connected
-    ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
     boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     
@@ -43,20 +47,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         if (!isConnected){
             Snackbar snackbar = Snackbar
-                .make(getApplicationContext(), "No internet connection", Snackbar.LENGTH_LONG);
+                .make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG);
  
             snackbar.show();
         }
             
     }
-
+    JSONObject score = null;
     public String pushToWatson (String path){
         SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, BASE_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response){
                         try {
-                            JSONObject score = new JSONObject(response);
+                            score = new JSONObject(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
