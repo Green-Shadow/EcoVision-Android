@@ -32,11 +32,22 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     String BASE_URL = "https://gateway-a.watsonplatform.net/visual-recognition/api/v3/classify?api_key=145b047be11f5059687578f4ca85325d23e0cdf8&version=2016-05-20";
-
+    //Validation to see if internet is connected
+    ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+    boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (!isConnected){
+            Snackbar snackbar = Snackbar
+                .make(getApplicationContext(), "No internet connection", Snackbar.LENGTH_LONG);
+ 
+            snackbar.show();
+        }
+            
     }
 
     public String pushToWatson (String path){
@@ -77,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
     File image = null;
     void onClick (View view){
-        new action().execute();
+        if(isConnected){new action().execute();}
     }
 
 
