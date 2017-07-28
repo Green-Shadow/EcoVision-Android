@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response){
                         try {
-                            JSONObject jObj = new JSONObject(response);
+                            JSONObject score = new JSONObject(response);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -56,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
-
-
         smr.addFile("images_file",image.getAbsolutePath());
         VolleyHelper.getInstance().addToRequestQueue(smr);
         return score.toString();
