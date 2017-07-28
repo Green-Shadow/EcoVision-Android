@@ -61,19 +61,18 @@ public class MainActivity extends AppCompatActivity {
 }
     File image = null;
     void onClick (View view){
-        new action().execute();
-    }
-
-    
-    private class action extends AsyncTask<Void,Void,String>{
-        @Override
-        protected void onPreExecute() {
+        while (image==null){
             try {
                 image = takePhoto();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        new action().execute();
+    }
+
+    
+    private class action extends AsyncTask<Void,Void,String>{
 
         @Override
         protected String doInBackground(Void... params) {
@@ -85,12 +84,12 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             TextView output = (TextView)findViewById(R.id.result);
             output.setText(s);
-            try{
+            /*try{
                 Intent intent = new Intent(MainActivity.this, ResultActivity.class); //Start of code for activity transfer.
                 intent.putExtra("PHOTO", image);
                 intent.putExtra("JSON",s);
                 startActivity(intent);}
-            catch(Exception e){e.printStackTrace();}
+            catch(Exception e){e.printStackTrace();}*/
             
             
         }
