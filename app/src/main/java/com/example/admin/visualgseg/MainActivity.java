@@ -1,5 +1,7 @@
 package com.example.admin.visualgseg;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -7,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -94,5 +99,47 @@ public class MainActivity extends AppCompatActivity {
             
         }
     }
+
+    public static Bitmap resizeBitMapImage(String filePath, int targetWidth, int targetHeight) {
+        Bitmap bitMapImage = null;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(filePath, options);
+            double sampleSize = 0;
+            Boolean scaleByHeight = Math.abs(options.outHeight - targetHeight) >= Math.abs(options.outWidth
+                    - targetWidth);
+            if (options.outHeight * options.outWidth * 2 >= 1638) {
+                sampleSize = scaleByHeight ? options.outHeight / targetHeight : options.outWidth / targetWidth;
+                sampleSize = (int) Math.pow(2d, Math.floor(Math.log(sampleSize) / Math.log(2d)));
+            }
+            options.inJustDecodeBounds = false;
+            options.inTempStorage = new byte[128];
+            while (true) {
+                try {
+                    options.inSampleSize = (int) sampleSize;
+                    bitMapImage = BitmapFactory.decodeFile(filePath, options);
+                    break;
+                } catch (Exception ex) {
+                    try {
+                        sampleSize = sampleSize * 2;
+                    } catch (Exception ex1) {
+
+                    }
+                }
+            }
+        } catch (Exception ex) {
+
+        }
+        return bitMapImage;
+    }// ignore this method,but keep it in code
+    private File compress (File uncompressed){
+        Bitmap bitmap = BitmapFactory.decodeFile(uncompressed.getAbsolutePath());
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, out);                                       // The integer represents the percentage quality(100 is the most quality,least compression)
+        Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+        File compressed = new File(decoded+".png");
+        return compressed;
+    }                                                  // ignore this method,but keep it in code
 
 }
