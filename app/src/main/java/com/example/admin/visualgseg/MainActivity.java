@@ -29,6 +29,8 @@ import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImagesOptions;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassification;
 
+import id.zelory.compressor.Compressor;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     return null;
 }
     File image = null;
-    void onClick (View view){
+    public void onClick (View view){
         while (image==null){
             try {
                 image = takePhoto();
@@ -141,5 +143,9 @@ public class MainActivity extends AppCompatActivity {
         File compressed = new File(decoded+".png");
         return compressed;
     }                                                  // ignore this method,but keep it in code
+    private File compress2(File uncon) throws IOException{
+        File compressed = new Compressor(this).compressToFile(uncon);
+        return compressed;
+    }
 
 }
