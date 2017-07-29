@@ -7,6 +7,8 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+
 
 
 import java.io.ByteArrayInputStream;
@@ -24,6 +26,10 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.app.AlertDialog.Builder;
 import android.widget.TextView;
+import android.app.ProgressDialog;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.content.Context;
 
 import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImagesOptions;
@@ -32,11 +38,20 @@ import com.ibm.watson.developer_cloud.visual_recognition.v3.model.VisualClassifi
 import id.zelory.compressor.Compressor;
 
 public class MainActivity extends AppCompatActivity {
-
+    boolean isConnected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        if (!isConnected){
+            Snackbar snackbar = Snackbar
+                .make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG);
+ 
+            snackbar.show();
+        }
     }
 
     public String pushToWatson (String path){
@@ -46,54 +61,71 @@ public class MainActivity extends AppCompatActivity {
         ClassifyImagesOptions options = null;
             options = new ClassifyImagesOptions.Builder()
                     .images(new File(path))//modified implementation as per SDK documentation.
-                    .threshold(0.1)//This is required for our classifier to refect in its current state.
+                    .threshold(0.1)
+                    .classifierIds("Wastetype_2031632458")//This is required for our classifier to refect in its current state.
                     .build();
         VisualClassification result = service.classify(options).execute();
         return result.toString();
     }
-    private File takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
-    String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date());
-    String imageFileName = "JPEG_" + timeStamp + "_";
-    File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+    String photoPath;
+    private void takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
+        photoPath = image.getAbsolutePath();
         if (image != null) {
             Uri photoURI = Uri.fromFile(image);
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
             startActivityForResult(takePictureIntent, 1);
-            return image;
         }
     }
-    return null;
 }
-    File image = null;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {//Callback for camera
+        if (requestCode == 1 && resultCode == RESULT_OK){
+            new action().execute();
+        }
+    }
     public void onClick (View view){
-        while (image==null){
-            try {
-                image = takePhoto();
+        if (isConnected){
+             try {
+                takePhoto();
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else{
+            Snackbar snackbar = Snackbar
+                .make(findViewById(android.R.id.content), "No internet connection", Snackbar.LENGTH_LONG);
+ 
+            snackbar.show();
         }
-        new action().execute();
+           
     }
 
     
     private class action extends AsyncTask<Void,Void,String>{
-
+        ProgressDialog pd;
+        @Override
+        protected void onPreExecute(){
+            pd=ProgressDialog.show(MainActivity.this,"","Connecting to Watson...",false); 
+        }
+        
         @Override
         protected String doInBackground(Void... params) {
-            String scores = pushToWatson(image.getAbsolutePath());
+            String scores = pushToWatson(photoPath);
             return scores;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            pd.dismiss();
             TextView output = (TextView)findViewById(R.id.result);
             output.setText(s);
             /*try{
                 Intent intent = new Intent(MainActivity.this, ResultActivity.class); //Start of code for activity transfer.
-                intent.putExtra("PHOTO", image);
+                intent.putExtra("PHOTO", photoPath);
                 intent.putExtra("JSON",s);
                 startActivity(intent);}
             catch(Exception e){e.printStackTrace();}*/
