@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         ClassifyImagesOptions options = null;
             options = new ClassifyImagesOptions.Builder()
                     .images(new File(path))//modified implementation as per SDK documentation.
-                    .threshold(0.1)
+                    .threshold(0.000001)
                     .classifierIds("Wastetype_2031632458")//This is required for our classifier to refect in its current state.
                     .build();
         VisualClassification result = service.classify(options).execute();
@@ -123,12 +123,12 @@ public class MainActivity extends AppCompatActivity {
             pd.dismiss();
             TextView output = (TextView)findViewById(R.id.result);
             output.setText(s);
-            /*try{
+            try{
                 Intent intent = new Intent(MainActivity.this, ResultActivity.class); //Start of code for activity transfer.
                 intent.putExtra("PHOTO", photoPath);
                 intent.putExtra("JSON",s);
                 startActivity(intent);}
-            catch(Exception e){e.printStackTrace();}*/
+            catch(Exception e){e.printStackTrace();}
             
             
         }

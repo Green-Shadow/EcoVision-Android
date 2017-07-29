@@ -22,7 +22,7 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String result = intent.getStringExtra("MainActivity.JSON");
         String imagePath = intent.getStringExtra("MainActivity.PHOTO");
-        resImgView.setImageURI(Uri.fromFile(new File(imagePath)));
+        //resImgView.setImageURI(Uri.fromFile(new File(imagePath)));
         try {
             resTextView.setText(JSONParse());
         } catch (JSONException e) {
@@ -40,7 +40,9 @@ public class ResultActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JSONArray classes = watson.getJSONArray("classifiers").getJSONObject(0).getJSONArray("classes");
+        JSONArray images = watson.getJSONArray("images");
+        JSONArray classifiers = images.getJSONArray(0);
+        JSONArray classes = classifiers.getJSONArray(0);
         for (int i=0; i < classes.length(); i+=1){
             String class_name = classes.getJSONObject(i).getString("class");
             int score = classes.getJSONObject(i).getInt("score");
