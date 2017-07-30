@@ -20,42 +20,11 @@ public class ResultActivity extends AppCompatActivity {
         ImageView resImgView = (ImageView)findViewById(R.id.res_imgview);
         TextView resTextView = (TextView)findViewById(R.id.res_textview);
         Intent intent = getIntent();
-        String result = intent.getStringExtra("MainActivity.JSON");
+        String result = "no data";
+        result = intent.getStringExtra("MainActivity.WASTE_TYPE");
         String imagePath = intent.getStringExtra("MainActivity.PHOTO");
         //resImgView.setImageURI(Uri.fromFile(new File(imagePath)));
-        try {
-            resTextView.setText(JSONParse());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    private String JSONParse() throws JSONException {
-        Intent intent = getIntent();
-        String result = intent.getStringExtra("MainActivity.JSON");
-        JSONObject watson = null;
-        String wasteType=null;
-        int highestScore=0;
-        try {
-            watson = new JSONObject(result);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JSONArray images = watson.getJSONArray("images");
-        JSONArray classifiers = images.getJSONArray(0);
-        JSONArray classes = classifiers.getJSONArray(0);
-        for (int i=0; i < classes.length(); i+=1){
-            String class_name = classes.getJSONObject(i).getString("class");
-            int score = classes.getJSONObject(i).getInt("score");
-            if (i==0){
-                highestScore=score;
-                wasteType=class_name;
-            }
-            if (score>highestScore){
-                highestScore=score;
-                wasteType=class_name;
-            }
-        }
-        return wasteType;
+        resTextView.setText(result);
     }
         
     }
