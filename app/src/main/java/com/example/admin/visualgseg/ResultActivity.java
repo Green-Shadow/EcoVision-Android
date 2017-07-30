@@ -23,7 +23,7 @@ public class ResultActivity extends AppCompatActivity {
         String result = "no data";
         result = intent.getStringExtra("MainActivity.WASTE_TYPE");
         String imagePath = intent.getStringExtra("MainActivity.PHOTO");
-        //resImgView.setImageURI(Uri.fromFile(new File(imagePath)));
+        resImgView.setImageURI(Uri.fromFile(new File(imagePath)));
         resTextView.setText(result);
     }
         

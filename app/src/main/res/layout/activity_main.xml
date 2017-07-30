@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.admin.visualgseg.MainActivity">
 
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="52dp"
-        android:onClick="onClick"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        tools:layout_editor_absoluteX="164dp"
-        tools:layout_editor_absoluteY="229dp" />
-
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="148dp"
+        android:layout_height="587dp"
+        android:id="@+id/result"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp" />
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_height="match_parent"
-        android:id="@+id/result"/>
+        android:layout_width="match_parent"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:onClick="onClick"
+            app:fabSize="normal"
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+    </android.support.design.widget.CoordinatorLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>
