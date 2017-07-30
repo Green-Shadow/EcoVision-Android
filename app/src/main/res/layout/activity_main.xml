@@ -7,12 +7,24 @@
     android:layout_height="match_parent"
     tools:context="com.example.admin.visualgseg.MainActivity">
 
-    <TextView
-        android:layout_width="148dp"
-        android:layout_height="587dp"
-        android:id="@+id/result"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/res_imgview" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/res_textview" />
+        </LinearLayout>
+    </ScrollView>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_height="match_parent"
