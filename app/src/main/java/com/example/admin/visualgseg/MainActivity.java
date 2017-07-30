@@ -1,10 +1,12 @@
 package com.example.admin.visualgseg;
 
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 
@@ -17,6 +19,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.app.ProgressDialog;
 import android.net.ConnectivityManager;
@@ -76,54 +79,62 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            String parsed="no data";
             try {
-                parsed = JSONParse(s);
+                JSONParse(s);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             pd.dismiss();
             ImageView resImgView = (ImageView)findViewById(R.id.res_imgview);
-            TextView resTextView = (TextView)findViewById(R.id.res_textview);
             resImgView.setImageURI(Uri.fromFile(new File(photoPath)));
-            resTextView.setText(parsed);
-            
-            
-            
         }
     }
 
     private File compress2(File uncon) throws IOException{
         return new Compressor(this).compressToFile(uncon);
     }
-    private String JSONParse(String JSON) throws JSONException {
-            JSONObject watson=null;
-            double highestScore=0.0;
-            String wasteType=null;
-            try {
-                watson = new JSONObject(JSON);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            JSONArray images = watson.getJSONArray("images");
-            JSONObject image_1 = images.getJSONObject(0);
-            JSONArray classifiers = image_1.getJSONArray("classifiers");
-            JSONObject classifier_wasteType = classifiers.getJSONObject(0);
-            JSONArray classes = classifier_wasteType.getJSONArray("classes");
-            for (int i = 0; i < classes.length(); i+=1){
-                String class_name = classes.getJSONObject(i).getString("class");
-                double score = classes.getJSONObject(i).getDouble("score");
-                if (i==0){
-                    highestScore=score;
-                    wasteType=class_name;
-                }
-                if (score>highestScore){
-                    highestScore=score;
-                    wasteType=class_name;
-                }
-            }
-            return wasteType;
+    private void JSONParse (String JSON) throws JSONException {
+        JSONObject watson=null;
+        double highestScore=0.0;
+        String wasteType=null;
+        try {
+            watson = new JSONObject(JSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        JSONArray images = watson.getJSONArray("images");
+        JSONObject image_1 = images.getJSONObject(0);
+        JSONArray classifiers = image_1.getJSONArray("classifiers");
+        JSONObject classifier_wasteType = classifiers.getJSONObject(0);
+        JSONArray classes = classifier_wasteType.getJSONArray("classes");
+        for (int i = 0; i < classes.length(); i+=1){
+            String class_name= classes.getJSONObject(i).getString("class");
+            double score= classes.getJSONObject(i).getDouble("score");
+            if (i==0){
+                highestScore=score;
+                wasteType=class_name;
+            }
+            if (score>highestScore){
+                highestScore=score;
+                wasteType=class_name;
+            }
+        }
+        TextView res_class_textview = (TextView) findViewById(R.id.res_class_textview);
+        TextView res_confidence_textview = (TextView) findViewById(R.id.res_confidence_textview);
+        res_class_textview.setText(wasteType);
+        String final_score = String.valueOf(highestScore);
+        res_confidence_textview.setText(final_score);
+        if (highestScore<=0.4){
+            res_class_textview.setTextColor(Color.RED);
+            res_confidence_textview.setTextColor(Color.RED);
+        }else if ((highestScore>0.4) && (highestScore<0.6) ){
+            res_class_textview.setTextColor(Color.YELLOW);
+            res_confidence_textview.setTextColor(Color.YELLOW);
+        }else if (highestScore>=0.6){
+            res_class_textview.setTextColor(Color.GREEN);
+            res_confidence_textview.setTextColor(Color.GREEN);
+        }
+    }
     private void takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -166,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
 
 }
