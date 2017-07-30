@@ -195,9 +195,9 @@ public class MainActivity extends AppCompatActivity {
         return compressed;
     }
 
-        private String JSONParse(String JSON) throws JSONException {
+    private String JSONParse(String JSON) throws JSONException {
             JSONObject watson=null;
-            int highestScore=0;
+            double highestScore=0.0;
             String wasteType=null;
             try {
                 watson = new JSONObject(JSON);
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             JSONArray classes = classifier_wasteType.getJSONArray("classes");
             for (int i = 0; i < classes.length(); i+=1){
                 String class_name = classes.getJSONObject(i).getString("class");
-                int score = classes.getJSONObject(i).getInt("score");
+                double score = classes.getJSONObject(i).getDouble("score");
                 if (i==0){
                     highestScore=score;
                     wasteType=class_name;
