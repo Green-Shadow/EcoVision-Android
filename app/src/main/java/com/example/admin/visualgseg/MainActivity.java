@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 
 
 
@@ -96,9 +97,11 @@ public class MainActivity extends AppCompatActivity {
             try{
                 Intent intent = new Intent(MainActivity.this, ResultActivity.class); //Start of code for activity transfer.
                 intent.putExtra("PHOTO", photoPath.toString());
-                intent.putExtra("WASTE_TYPE",parsed.toString());
+                intent.putExtra("WASTE_TYPE",JSONParse(s).toString());
                 startActivity(intent);}
-            catch(Exception e){e.printStackTrace();}
+            catch(Exception e){
+                e.printStackTrace();
+            }
             
             
         }
