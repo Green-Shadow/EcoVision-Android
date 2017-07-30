@@ -1,22 +1,15 @@
 package com.example.admin.visualgseg;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.widget.ImageView;
 
 
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,9 +17,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.app.AlertDialog.Builder;
 import android.widget.TextView;
 import android.app.ProgressDialog;
 import android.net.ConnectivityManager;
@@ -104,8 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private File compress2(File uncon) throws IOException{
-        File compressed = new Compressor(this).compressToFile(uncon);
-        return compressed;
+        return new Compressor(this).compressToFile(uncon);
     }
     private String JSONParse(String JSON) throws JSONException {
             JSONObject watson=null;
@@ -153,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
         VisualRecognition service = new VisualRecognition(VisualRecognition.VERSION_DATE_2016_05_20);
         service.setApiKey("145b047be11f5059687578f4ca85325d23e0cdf8");
 
-        ClassifyImagesOptions options = null;
-        options = new ClassifyImagesOptions.Builder()
+        ClassifyImagesOptions options = new ClassifyImagesOptions
+                .Builder()
                 .images(data)//modified implementation as per SDK documentation.
                 .threshold(0.000001)
                 .classifierIds("Wastetype_2031632458")//This is required for our classifier to refect in its current state.
