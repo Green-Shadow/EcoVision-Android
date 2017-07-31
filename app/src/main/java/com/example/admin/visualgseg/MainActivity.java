@@ -44,6 +44,7 @@ import id.zelory.compressor.Compressor;
 
 public class MainActivity extends AppCompatActivity {
     boolean isConnected;
+    String[] permissions = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +70,11 @@ public class MainActivity extends AppCompatActivity {
             }
             case 1:{
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && cameraGranted == true){
-                    new action().execute();
+                try {
+                    takePhoto();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 }
             }
     }
@@ -194,10 +199,12 @@ public class MainActivity extends AppCompatActivity {
     public void onClick (View view){
         if (isConnected){
             if (Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1){handlePermissionsM();}
-            try {
-                takePhoto();
-            } catch (IOException e) {
-                e.printStackTrace();
+            else{
+                try {
+                    takePhoto();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }else{
             Snackbar snackbar = Snackbar
@@ -209,11 +216,16 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void handlePermissionsM(){
-        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
-             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},0);
+        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED
+        || ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+             ActivityCompat.requestPermissions(MainActivity.this,permissions,0);
         }
-        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        else{
+                try {
+                    takePhoto();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
     }
 
