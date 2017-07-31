@@ -1,4 +1,4 @@
-package com.example.admin.visualgseg;
+package com.greenshadow.visualgseg;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -25,6 +25,11 @@ import android.app.ProgressDialog;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.content.Context;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.content.pm.PackageManager;
+import android.Manifest;
+import android.support.v4.content.FileProvider;
 
 import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImagesOptions;
@@ -52,11 +57,33 @@ public class MainActivity extends AppCompatActivity {
             snackbar.show();
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        boolean cameraGranted = false;
+        switch (requestCode) {
+            case 0: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    cameraGranted = true;
+                }
+            }
+            case 1:{
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && cameraGranted == true){
+                    new action().execute();
+                }
+            }
+    }
+}
+
     String photoPath;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {//Callback for camera
         if (requestCode == 1 && resultCode == RESULT_OK){
-            new action().execute();
+            if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},0);
+        }
+        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        }
         }
     }
     private class action extends AsyncTask<Void,Void,String>{
@@ -79,14 +106,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
+        ImageView resImgView = (ImageView)findViewById(R.id.res_imgview);
+            resImgView.setImageURI(Uri.fromFile(new File(photoPath)));
             try {
                 JSONParse(s);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             pd.dismiss();
-            ImageView resImgView = (ImageView)findViewById(R.id.res_imgview);
-            resImgView.setImageURI(Uri.fromFile(new File(photoPath)));
         }
     }
 
@@ -143,7 +170,9 @@ public class MainActivity extends AppCompatActivity {
             File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
             photoPath = image.getAbsolutePath();
             if (image != null) {
-                Uri photoURI = Uri.fromFile(image);
+                Uri photoURI = FileProvider.getUriForFile(this,
+                                                  "com.example.android.fileprovider",
+                                                  image);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, 1);
             }
@@ -156,8 +185,8 @@ public class MainActivity extends AppCompatActivity {
         ClassifyImagesOptions options = new ClassifyImagesOptions
                 .Builder()
                 .images(data)//modified implementation as per SDK documentation.
-                .threshold(0.000001)
-                .classifierIds("Wastetype_2031632458")//This is required for our classifier to refect in its current state.
+                .threshold(0.0001)
+                .classifierIds("WasteType_130613812")//This is required for our classifier to refect in its current state.
                 .build();
         VisualClassification result = service.classify(options).execute();
         return result.toString();

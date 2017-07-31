@@ -4,17 +4,26 @@ android {
     compileSdkVersion 25
     buildToolsVersion "26.0.0"
     defaultConfig {
-        applicationId "com.example.admin.visualgseg"
+        applicationId "com.greenshadow.visualgseg"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file("my-release-key.jks")
+            storePassword "mxyzptlk"
+            keyAlias "EcoKey"
+            keyPassword "mxyzptlk"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     lintOptions {
