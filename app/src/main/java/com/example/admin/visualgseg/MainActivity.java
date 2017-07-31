@@ -78,21 +78,11 @@ public class MainActivity extends AppCompatActivity {
     String photoPath;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {//Callback for camera
-    if (Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1){
         if (requestCode == 1 && resultCode == RESULT_OK){
-            if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
-             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},0);
+            new action().execute();
         }
-        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
-             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-        }
-        }
-    }
-    else{
-        new action().execute();
-    }
-
-    }
+}
+    
     private class action extends AsyncTask<Void,Void,String>{
         ProgressDialog pd;
         @Override
@@ -203,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
     }
     public void onClick (View view){
         if (isConnected){
+            if (Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1){handlePermissionsM();}
             try {
                 takePhoto();
             } catch (IOException e) {
@@ -215,6 +206,15 @@ public class MainActivity extends AppCompatActivity {
             snackbar.show();
         }
 
+    }
+    
+    private void handlePermissionsM(){
+        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},0);
+        }
+        if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
+             ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        }
     }
 
 
