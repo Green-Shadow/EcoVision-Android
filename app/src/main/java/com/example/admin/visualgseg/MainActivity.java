@@ -30,6 +30,7 @@ import android.support.v4.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.support.v4.content.FileProvider;
+import android.os.Build;
 
 import com.ibm.watson.developer_cloud.visual_recognition.v3.VisualRecognition;
 import com.ibm.watson.developer_cloud.visual_recognition.v3.model.ClassifyImagesOptions;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     String photoPath;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {//Callback for camera
+    if (Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP_MR1){
         if (requestCode == 1 && resultCode == RESULT_OK){
             if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
              ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.CAMERA},0);
@@ -85,6 +87,11 @@ public class MainActivity extends AppCompatActivity {
              ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
         }
+    }
+    else{
+        new action().execute();
+    }
+
     }
     private class action extends AsyncTask<Void,Void,String>{
         ProgressDialog pd;
@@ -170,9 +177,12 @@ public class MainActivity extends AppCompatActivity {
             File image = File.createTempFile(imageFileName,".jpg",getExternalFilesDir(Environment.DIRECTORY_PICTURES));
             photoPath = image.getAbsolutePath();
             if (image != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                Uri photoURI = null;
+                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.N){
+                photoURI = FileProvider.getUriForFile(this,
                                                   "com.example.android.fileprovider",
-                                                  image);
+                                                  image);}
+                else{photoURI = Uri.fromFile(image);}
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, 1);
             }
