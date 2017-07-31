@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 .Builder()
                 .images(data)//modified implementation as per SDK documentation.
                 .threshold(0.0001)
-                .classifierIds("WasteType_130613812")//This is required for our classifier to refect in its current state.
+                .classifierIds("WasteType_909361399")//This is required for our classifier to refect in its current state.
                 .build();
         VisualClassification result = service.classify(options).execute();
         return result.toString();
