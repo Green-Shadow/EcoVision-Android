@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.app.ProgressDialog;
 import android.net.ConnectivityManager;
@@ -167,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
             res_class_textview.setTextColor(getResources().getColor(R.color.confident));
             res_confidence_textview.setTextColor(getResources().getColor(R.color.confident));
         }
+        setBiodegradeableVisual(highestScore);
     }
     private void takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -230,6 +232,13 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
         }
+    }
+     void setBiodegradeableVisual (double confidence){
+         ProgressBar BioDegradeable_visual = (ProgressBar) findViewById(R.id.BioDegradeable_visual);   
+        double percentage_confidence = confidence*100;
+        int percentage = (int)percentage_confidence;
+        BioDegradeable_visual.setProgress(percentage);
+        BioDegradeable_visual.setVisibility(View.VISIBLE);
     }
 
 
