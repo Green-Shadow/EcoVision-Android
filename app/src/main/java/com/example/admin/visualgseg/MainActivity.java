@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-        ImageView resImgView = (ImageView)findViewById(R.id.res_imgview);
+        ImageView resImgView = (ImageView)findViewById(R.id.resImgView);
             resImgView.setImageURI(Uri.fromFile(new File(photoPath)));
             try {
                 JSONParse(s);
@@ -148,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
                 wasteType=class_name;
             }
         }
+        TextView note = (TextView) findViewById(R.id.textView3);
+        note.setVisibility(View.GONE);
+        ImageView imageNote = (ImageView) findViewById(R.id.imageView2);
+        imageNote.setVisibility(View.GONE);
         TextView res_class_textview = (TextView) findViewById(R.id.res_class_textview);
         TextView res_confidence_textview = (TextView) findViewById(R.id.res_confidence_textview);
         res_class_textview.setText(wasteType);
@@ -214,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-    
     private void handlePermissionsM(){
         if (ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED
         || ContextCompat.checkSelfPermission(MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED) {
