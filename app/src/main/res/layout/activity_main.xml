@@ -71,6 +71,7 @@
         app:layout_constraintVertical_bias="0.131"
         app:layout_constraintTop_toBottomOf="@+id/resImgView"
         app:layout_constraintLeft_toRightOf="@+id/res_class_textview" />
+
     <TextView
         android:id="@+id/textView3"
         android:layout_width="183dp"
@@ -86,11 +87,10 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="8dp"
         app:layout_constraintVertical_bias="0.499" />
-
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="256dp"
-        android:layout_height="256dp"
+        android:layout_height="128dp"
         app:srcCompat="@drawable/watson_card"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/textView3"

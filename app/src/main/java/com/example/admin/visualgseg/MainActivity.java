@@ -158,14 +158,14 @@ public class MainActivity extends AppCompatActivity {
         String final_score = String.valueOf(highestScore);
         res_confidence_textview.setText(final_score);
         if (highestScore<=0.4){
-            res_class_textview.setTextColor(Color.RED);
-            res_confidence_textview.setTextColor(Color.RED);
+            res_class_textview.setTextColor(getResources().getColor(R.color.notConfident));
+            res_confidence_textview.setTextColor(getResources().getColor(R.color.notConfident));
         }else if ((highestScore>0.4) && (highestScore<0.6) ){
-            res_class_textview.setTextColor(Color.YELLOW);
-            res_confidence_textview.setTextColor(Color.YELLOW);
+            res_class_textview.setTextColor(getResources().getColor(R.color.halfConfident));
+            res_confidence_textview.setTextColor(getResources().getColor(R.color.halfConfident));
         }else if (highestScore>=0.6){
-            res_class_textview.setTextColor(Color.GREEN);
-            res_confidence_textview.setTextColor(Color.GREEN);
+            res_class_textview.setTextColor(getResources().getColor(R.color.confident));
+            res_confidence_textview.setTextColor(getResources().getColor(R.color.confident));
         }
     }
     private void takePhoto() throws IOException{ //Consolidated both image handling methods for code hygeine
